@@ -14,6 +14,6 @@ public class Main extends AppCompatActivity {
     }
     public void onClick(View v){
         TextView tv=(TextView)findViewById(R.id.textView);
-        tv.setText("helloTest3");
+        tv.setText("helloTest45");
     }
 }
