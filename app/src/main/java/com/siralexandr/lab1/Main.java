@@ -7,17 +7,23 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.nio.Buffer;
+
 public class Main extends AppCompatActivity implements View.OnClickListener{
-    TextView tv;
+    TextView tv,bv;
     Toast t;
+    char sign;
     boolean first=true;
     Button b1,b2,b3,b4,b5,b6,b7,b8,b9,b0;
     Button bPlus,bMinus,bMult,bDiv,bC,bDot,bEqual,bSQRT,b1X,bPlusMinus;
+    double Buff=0;
+    double CurrNum=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tv=(TextView)findViewById(R.id.textView);
+        bv=(TextView)findViewById(R.id.BufferView);
         b0=(Button)findViewById(R.id.button0);
         b0.setOnClickListener(this);
         b1=(Button)findViewById(R.id.button1);
@@ -59,15 +65,47 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         bPlusMinus=(Button)findViewById(R.id.buttonPlusMinus);
         bPlusMinus.setOnClickListener(this);
 
-        double First=0;
-        double Second=0;
+
 
     }
     public double getCurrentNum(){
-        if(!first){
-            double d=Double.valueOf(tv.getText().toString()).doubleValue();
+        if(tv.getText().toString().equals("")||tv.getText().toString().equals("NaN")){first=true;tv.setText("0");return  0;}
+        else if(!first){
+            String text=tv.getText().toString();
+            if(text.endsWith(".")){
+                text+="0";}
+            double d=Double.valueOf(text).doubleValue();
+
         return d;}
+
         else {return 0;}
+    }
+    public void calculate(){
+        switch (sign){
+            case '+':
+                Buff+=+CurrNum;
+                break;
+            case '-':
+                Buff-=CurrNum;
+                break;
+            case '*':
+                Buff*=CurrNum;
+                break;
+            case '/':
+                if(CurrNum!=0.0)Buff/=CurrNum;
+                else {
+                    t = Toast.makeText(getApplicationContext(),
+                            "Деление на ноль!", Toast.LENGTH_SHORT);
+                    t.show();
+                }
+                break;
+            case '=':
+                tv.setText(Double.toString(Buff));
+                break;
+            default:
+                break;
+        }
+
     }
     @Override
     public void onClick(View v) {
@@ -76,10 +114,11 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
             tv.setText("");
             first=!first;
         }
+
         switch (v.getId()) {
 
             case R.id.button0:
-double d=getCurrentNum();
+                double d=getCurrentNum();
 
                 if(getCurrentNum()!=0) {
                     tv.setText(tv.getText() + ((Button) v).getText().toString());
@@ -92,40 +131,58 @@ double d=getCurrentNum();
                 break;
 
             case R.id.buttonMult:
-                // do your code
+                sign='*';
                 break;
 
             case R.id.buttonDiv:
-                // do your code
+                sign='/';
                 break;
 
             case R.id.buttonPlus:
-                // do your code
+                sign='+';
+                if(getCurrentNum()!=0.0){calculate();}
+
+                tv.setText("");
+                bv.setText(Double.toString(Buff));
                 break;
             case R.id.buttonMinus:
-                // do your code
+                sign='-';
+                Buff-=getCurrentNum();
+                tv.setText("");
+                bv.setText(Double.toString(Buff));
                 break;
 
             case R.id.buttonDot:
-                // do your code
+                String screenText = tv.getText().toString();
+                if (!screenText.contains("."))
+                   tv.setText(screenText+".");
+                else
+                    t = Toast.makeText(getApplicationContext(),
+                            "Точка уже есть!", Toast.LENGTH_SHORT);
+                t.show();
                 break;
 
             case R.id.buttonC:
-                // do your code
+                tv.setText("0");
+                first=true;
+
                 break;
 
             case R.id.buttonPlusMinus:
-                // do your code
+                if(getCurrentNum()!=0.0){
+                tv.setText(Double.toString(getCurrentNum()*-1));}
+
                 break;
 
             case R.id.button1X:
-                // do your code
+
                 break;
             case R.id.buttonSqrt:
-                // do your code
+                tv.setText(Double.toString(Math.sqrt(getCurrentNum())));
                 break;
 
             case R.id.buttonEqual:
+                sign='=';
                 // do your code
                 break;
 
