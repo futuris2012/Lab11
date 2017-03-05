@@ -10,9 +10,9 @@ import android.widget.Toast;
 import java.nio.Buffer;
 
 public class Main extends AppCompatActivity implements View.OnClickListener{
-    TextView tv,bv;
+    TextView tv;
     Toast t;
-    char sign;
+    char sign='+';
     boolean first=true;
     Button b1,b2,b3,b4,b5,b6,b7,b8,b9,b0;
     Button bPlus,bMinus,bMult,bDiv,bC,bDot,bEqual,bSQRT,b1X,bPlusMinus;
@@ -23,7 +23,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tv=(TextView)findViewById(R.id.textView);
-        bv=(TextView)findViewById(R.id.BufferView);
+
         b0=(Button)findViewById(R.id.button0);
         b0.setOnClickListener(this);
         b1=(Button)findViewById(R.id.button1);
@@ -81,9 +81,10 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         else {return 0;}
     }
     public void calculate(){
+CurrNum=getCurrentNum();
         switch (sign){
             case '+':
-                Buff+=+CurrNum;
+                Buff+=CurrNum;
                 break;
             case '-':
                 Buff-=CurrNum;
@@ -100,6 +101,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                 }
                 break;
             case '=':
+
+
                 tv.setText(Double.toString(Buff));
                 break;
             default:
@@ -131,41 +134,57 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                 break;
 
             case R.id.buttonMult:
+
+                if(getCurrentNum()!=0.0){calculate();}
+
+
+
+                tv.setText("");
                 sign='*';
                 break;
 
             case R.id.buttonDiv:
+
+                if(getCurrentNum()!=0.0){calculate();}
+
+
+
+                tv.setText("");
                 sign='/';
                 break;
 
             case R.id.buttonPlus:
-                sign='+';
+
                 if(getCurrentNum()!=0.0){calculate();}
 
+
+
                 tv.setText("");
-                bv.setText(Double.toString(Buff));
+                sign='+';
                 break;
             case R.id.buttonMinus:
-                sign='-';
-                Buff-=getCurrentNum();
+                if(getCurrentNum()!=0.0){calculate();}
+
+
+
                 tv.setText("");
-                bv.setText(Double.toString(Buff));
+                sign='-';
                 break;
 
             case R.id.buttonDot:
                 String screenText = tv.getText().toString();
                 if (!screenText.contains("."))
-                   tv.setText(screenText+".");
+                { tv.setText(screenText+".");}
                 else
-                    t = Toast.makeText(getApplicationContext(),
+                { t = Toast.makeText(getApplicationContext(),
                             "Точка уже есть!", Toast.LENGTH_SHORT);
-                t.show();
+                    t.show();}
                 break;
 
             case R.id.buttonC:
                 tv.setText("0");
                 first=true;
-
+                Buff=0;
                 break;
 
             case R.id.buttonPlusMinus:
@@ -175,15 +194,28 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                 break;
 
             case R.id.button1X:
+                double cu=getCurrentNum();
+                if(cu!=0) {
+                    Buff=1/cu;
+                    tv.setText(Double.toString(Buff));
 
+                }
+                else{
+                    t = Toast.makeText(getApplicationContext(),
+                            "Деление на ноль!", Toast.LENGTH_SHORT);
+                    t.show();
+                }
                 break;
             case R.id.buttonSqrt:
-                tv.setText(Double.toString(Math.sqrt(getCurrentNum())));
+                Buff=Math.sqrt(getCurrentNum());
+                tv.setText(Double.toString(Buff));
                 break;
 
             case R.id.buttonEqual:
+                calculate();
                 sign='=';
-                // do your code
+                calculate();
+
                 break;
 
             default:
